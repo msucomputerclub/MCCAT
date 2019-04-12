@@ -4,10 +4,22 @@ const router = express.Router();
 const User = require("../../models/User");
 const Meeting = require("../../models/Meeting");
 
+//import validation
+const validateSigninInput = require("../../validation/signin");
+
+const cleanCWID = require("../../validation/clean-cwid");
+
 router.post("/signin", (req, res) => {
+  req.body.cwid = cleanCWID(req.body.cwid);
+  const { errors, isValid } = validateSigninInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
   User.findOne({ cwid: req.body.cwid }).then(user => {
     if (!user) {
-      return res.status(404).json("user not found");
+      errors.usernotfound = "user not found";
+      return res.status(404).json(errors);
     } else {
       Meeting.findOne({ date: new Date().toLocaleDateString() }).then(
         meeting => {
@@ -30,7 +42,8 @@ router.post("/signin", (req, res) => {
               )
               .catch(err => console.log(err));
           } else {
-            return res.status(404).json("no meeting today");
+            errors.nomeeting = "no meeting today";
+            return res.status(404).json(errors);
           }
         }
       );
@@ -42,7 +55,8 @@ router.post("/create/today", (req, res) => {
   Meeting.findOne({ date: new Date().toLocaleDateString() }).then(meeting => {
     if (meeting) {
       console.log(JSON.stringify(meeting));
-      return res.status(400).json("meeting already exists");
+      errors.meetingexists = "meeting already exists";
+      return res.status(400).json(errors);
     } else {
       new Meeting({
         date: new Date().toLocaleDateString()
@@ -62,7 +76,8 @@ router.get("/info/:date", (req, res) => {
     date: new Date(req.params.date).toLocaleDateString()
   }).then(meeting => {
     if (!meeting) {
-      return res.status(404).json("no meeting found");
+      errors.nomeeting = "no meeting found";
+      return res.status(404).json(errors);
     } else {
       return res.status(200).json(meeting);
     }
