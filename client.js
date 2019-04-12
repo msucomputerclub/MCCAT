@@ -7,7 +7,6 @@ const User = require("./models/User");
 const Meeting = require("./models/Meeting");
 // var stdin = process.openStdin();
 
-var db = "mongodb://mccatadmin:123456A@ds137596.mlab.com:37596/mccat";
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() => {
