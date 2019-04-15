@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
+import Signin from "./components/SignIn";
 
 class App extends Component {
   state = {
@@ -14,7 +15,11 @@ class App extends Component {
   }
 
   render() {
-    return <div className="App" />;
+    return (
+      <div className="App">
+        <Signin />
+      </div>
+    );
   }
 }
 
