@@ -10,13 +10,13 @@ const validateSigninInput = require("../../validation/signin");
 const cleanCWID = require("../../validation/clean-cwid");
 
 router.post("/signin", (req, res) => {
-  req.body.cwid = cleanCWID(req.body.cwid);
+  const cwid = cleanCWID(req.body.cwid);
   const { errors, isValid } = validateSigninInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  User.findOne({ cwid: req.body.cwid }).then(user => {
+  User.findOne({ cwid }).then(user => {
     if (!user) {
       errors.usernotfound = "user not found";
       return res.status(404).json(errors);
@@ -51,6 +51,11 @@ router.post("/signin", (req, res) => {
   });
 });
 
+router.post("/test", (req, res, next) => {
+  console.log(req.body);
+  return res.status(200).json(req.formData);
+});
+
 router.post("/create/today", (req, res) => {
   Meeting.findOne({ date: new Date().toLocaleDateString() }).then(meeting => {
     if (meeting) {
@@ -63,9 +68,9 @@ router.post("/create/today", (req, res) => {
       })
         .save()
         .then(
-          res
-            .status(200)
-            .json(`meeting created for ${new Date().toLocaleDateString()}`)
+          res.status(200).json({
+            message: `meeting created for ${new Date().toLocaleDateString()}`
+          })
         );
     }
   });

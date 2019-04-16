@@ -60,4 +60,14 @@ router.get("/test/:data", (req, res) => {
   return res.json(data);
 });
 
+router.post("/test", (req, res) => {
+  var data = req.body.cwid
+    .match(/(^;\d{9}(?:=))|(^M\d+)|(^\d{8,9})/g)[0]
+    .replace(/\D/g, "")
+    .replace(/^0+/g, "")
+    .trim();
+  console.log(data);
+  return res.json(data);
+});
+
 module.exports = router;

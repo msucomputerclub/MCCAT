@@ -7,11 +7,11 @@ class App extends Component {
     meetingDate: ""
   };
   componentDidMount() {
-    fetch(
-      `http://localhost:5000/api/meeting/${new Date().toLocaleDateString()}`
-    )
-      .then(response => response.json())
-      .then(result => {});
+    // fetch(
+    //   `http://localhost:5000/api/meeting/${new Date().toLocaleDateString()}`
+    // )
+    //   .then(response => response.json())
+    //   .then(result => {});
   }
 
   render() {
