@@ -61,13 +61,8 @@ router.get("/test/:data", (req, res) => {
 });
 
 router.post("/test", (req, res) => {
-  var data = req.body.cwid
-    .match(/(^;\d{9}(?:=))|(^M\d+)|(^\d{8,9})/g)[0]
-    .replace(/\D/g, "")
-    .replace(/^0+/g, "")
-    .trim();
-  console.log(data);
-  return res.json(data);
+  req.body.cwid = cleanCWID(req.body.cwid);
+  return res.json(req.body.cwid);
 });
 
 module.exports = router;

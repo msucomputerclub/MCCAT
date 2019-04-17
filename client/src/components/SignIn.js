@@ -17,7 +17,7 @@ export default class SignIn extends Component {
     const { cwid } = this.state;
     console.log(`inside submit. cwid: ${cwid}`);
 
-    fetch("http://localhost:5000/api/users/test", {
+    fetch("http://localhost:5000/api/meeting/signin", {
       method: "post",
       headers: {
         Accept: "application/json",
@@ -29,16 +29,20 @@ export default class SignIn extends Component {
         cwid
       })
     })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          console.log("error");
+          throw response.json();
+        }
+        console.log("no error");
+        return response.json();
+      })
       .then(res => {
         console.log(res);
+      })
+      .catch(err => {
+        err.then(err => console.log(err));
       });
-
-    // axios
-    //   .post("localhost:5000/", { cwid }, { crossdomain: true })
-    //   .then(response => {
-    //     console.log(`reponse: ${response}`);
-    //   });
   };
 
   render() {
@@ -47,7 +51,7 @@ export default class SignIn extends Component {
       <div>
         <form
           onSubmit={this.onSubmit}
-          style={{ position: "absolute", left: "-99em" }}
+          // style={{ position: "absolute", left: "-99em" }}
         >
           <input name="cwid" value={cwid} autoFocus onChange={this.onChange} />
           <button type="submit">Submit</button>
