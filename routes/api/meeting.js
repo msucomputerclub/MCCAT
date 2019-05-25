@@ -9,6 +9,20 @@ const validateSigninInput = require("../../validation/signin");
 
 const cleanCWID = require("../../validation/clean-cwid");
 
+router.get("/", (req, res) => {
+  var errors = [];
+  Meeting.findOne({
+    date: new Date().toLocaleDateString()
+  }).then(meeting => {
+    if (!meeting) {
+      errors.nomeeting = "no meeting found";
+      return res.status(404).json(errors);
+    } else {
+      return res.status(200).json(meeting.date);
+    }
+  });
+});
+
 router.post("/signin", (req, res) => {
   const cwid = cleanCWID(req.body.cwid);
   const { errors, isValid } = validateSigninInput(req.body);
@@ -56,7 +70,7 @@ router.post("/test", (req, res, next) => {
   return res.status(200).json(req.formData);
 });
 
-router.post("/create/today", (req, res) => {
+router.get("/create/today", (req, res) => {
   Meeting.findOne({ date: new Date().toLocaleDateString() }).then(meeting => {
     if (meeting) {
       console.log(JSON.stringify(meeting));
