@@ -10,7 +10,7 @@ const validateSigninInput = require("../../validation/signin");
 const cleanCWID = require("../../validation/clean-cwid");
 
 router.get("/", (req, res) => {
-  var errors = [];
+  var errors = {};
   Meeting.findOne({
     date: new Date().toLocaleDateString()
   }).then(meeting => {
@@ -24,7 +24,8 @@ router.get("/", (req, res) => {
 });
 
 router.post("/signin", (req, res) => {
-  const cwid = cleanCWID(req.body.cwid);
+  console.log(req.body);
+  var cwid = req.body.cwid = cleanCWID(req.body.cwid);
   const { errors, isValid } = validateSigninInput(req.body);
 
   if (!isValid) {
@@ -38,7 +39,7 @@ router.post("/signin", (req, res) => {
       Meeting.findOne({ date: new Date().toLocaleDateString() }).then(
         meeting => {
           if (meeting) {
-            Meeting.update(
+            Meeting.updateOne(
               { date: new Date().toLocaleDateString() },
               {
                 $push: {

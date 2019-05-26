@@ -39,7 +39,7 @@ router.post("/register", (req, res) => {
   });
 });
 
-router.get("/info", (req, res) => {
+router.post("/info", (req, res) => {
   req.body.cwid = cleanCWID(req.body.cwid);
   User.findOne({ cwid: req.body.cwid }).then(user => {
     if (!user) {
