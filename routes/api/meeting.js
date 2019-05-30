@@ -25,7 +25,7 @@ router.get("/", (req, res) => {
 
 router.post("/signin", (req, res) => {
   console.log(req.body);
-  var cwid = req.body.cwid = cleanCWID(req.body.cwid);
+  var cwid = (req.body.cwid = cleanCWID(req.body.cwid));
   const { errors, isValid } = validateSigninInput(req.body);
 
   if (!isValid) {
@@ -36,32 +36,24 @@ router.post("/signin", (req, res) => {
       errors.usernotfound = "user not found";
       return res.status(404).json(errors);
     } else {
-      Meeting.findOne({ date: new Date().toLocaleDateString() }).then(
-        meeting => {
-          if (meeting) {
-            Meeting.updateOne(
-              { date: new Date().toLocaleDateString() },
-              {
-                $push: {
-                  attendees: {
-                    $each: [user.id],
-                    position: -1
-                  }
+      Meeting.findOne({date: new Date().toLocaleDateString()}).then(meeting=>{
+        if(meeting){
+          Meeting.updateOne(
+            { date: new Date().toLocaleDateString() },
+            {
+              $addToSet: {
+                attendees: {
+                  _id: user._id
                 }
               }
-            )
-              .then(
-                res
-                  .status(200)
-                  .json(`Hello ${user.firstName}, welcome to Computer Club`)
-              )
-              .catch(err => console.log(err));
-          } else {
-            errors.nomeeting = "no meeting today";
-            return res.status(404).json(errors);
-          }
+            }
+          )
+            .then(res.status(200).json(`Hello ${user.firstName}, welcome to Computer Club`))
+            .catch(err => console.log(err));
+        }else{
+          return res.status(404).json("Meeting does not exist");
         }
-      );
+      })
     }
   });
 });
