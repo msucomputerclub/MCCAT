@@ -30,10 +30,11 @@ router.post("/register", (req, res) => {
         email: req.body.email
       })
         .save()
-        .then(err => {
-          if (err) {
+        .then(user => {
+            console.log(`user ${user.firstName} registered`);
             return res.status(200).json("user registered");
-          }
+        }).catch(err=>{
+          console.log(err);
         });
     }
   });

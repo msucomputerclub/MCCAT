@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require('path');
 
 const { mongoURI, port } = require("./config/config");
 
@@ -23,6 +24,7 @@ app.use(cors());
 //Body Parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static('public'))
 
 mongoose
   .connect(mongoURI, { useNewUrlParser: true })
@@ -35,7 +37,7 @@ app.use("/api/users", users);
 app.use("/api/meeting", meeting);
 
 app.get("/", (req, res, next) => {
-  res.status(200).json("homepage");
+  res.sendFile(path.resolve(`${__dirname}/client2/index.html`));
 });
 
 app.post("/", (req, res, next) => {
