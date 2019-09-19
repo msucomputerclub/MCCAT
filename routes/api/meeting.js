@@ -62,6 +62,7 @@ router.get("/create/today", (req, res) => {
 //@desc   get names of attendees for a given date
 //@access Public
 router.get("/:date", (req, res) => {
+  errors = {};
   Meeting.findOne({
     date: new Date(req.params.date).toLocaleDateString()
   })
@@ -89,6 +90,7 @@ router.get("/:date", (req, res) => {
 //@desc   get sheets function to import attendance
 //@access Public
 router.get("/sheets/:date", (req, res) => {
+  errors = {};
   Meeting.findOne({
     date: new Date(req.params.date).toLocaleDateString()
   })
@@ -160,6 +162,17 @@ router.post("/signin", (req, res) => {
 router.post("/test", (req, res, next) => {
   console.log(req.body);
   return res.status(200).json(req.formData);
+});
+
+router.delete("/:date", (req, res) => {
+  Meeting.deleteOne({ date: new Date(req.params.date).toLocaleDateString() })
+    .then(response => {
+      return res.status(200).json("meeting removed");
+    })
+    .catch(err => {
+      console.warn(err);
+      return res.status(500).json(err);
+    });
 });
 
 module.exports = router;
