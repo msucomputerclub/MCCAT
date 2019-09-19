@@ -8,9 +8,25 @@ const Meeting = require("../../models/Meeting");
 //import validation
 const validateRegisterInput = require("../../validation/register");
 
-//tools
+//import tools
 const cleanCWID = require("../../validation/clean-cwid");
 
+//@route  GET api/user/clean/:data
+//@desc   TEMP clean cwid
+//@access Public
+router.get("/clean/:data", (req, res) => {
+  var data = req.params.data
+    .match(/(^;\d{9}(?:=))|(^M\d+)|(^\d{8,9})/g)[0]
+    .replace(/\D/g, "")
+    .replace(/^0+/g, "")
+    .trim();
+  console.log(data);
+  return res.json(data);
+});
+
+//@route  POST api/user/register
+//@desc   register memeber
+//@access Public
 router.post("/register", (req, res) => {
   req.body.cwid = cleanCWID(req.body.cwid);
   const { errors, isValid } = validateRegisterInput(req.body);
@@ -66,6 +82,9 @@ router.post("/register", (req, res) => {
   });
 });
 
+//@route  POST api/user/register
+//@desc   retrieve user info
+//@access Public
 router.post("/info", (req, res) => {
   req.body.cwid = cleanCWID(req.body.cwid);
   User.findOne({ cwid: req.body.cwid }).then(user => {
@@ -75,21 +94,6 @@ router.post("/info", (req, res) => {
       res.json(user);
     }
   });
-});
-
-router.get("/test/:data", (req, res) => {
-  var data = req.params.data
-    .match(/(^;\d{9}(?:=))|(^M\d+)|(^\d{8,9})/g)[0]
-    .replace(/\D/g, "")
-    .replace(/^0+/g, "")
-    .trim();
-  console.log(data);
-  return res.json(data);
-});
-
-router.post("/test", (req, res) => {
-  req.body.cwid = cleanCWID(req.body.cwid);
-  return res.json(req.body.cwid);
 });
 
 module.exports = router;
