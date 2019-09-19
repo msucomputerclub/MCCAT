@@ -17,27 +17,17 @@ function signin() {
       location.reload();
     } else {
       if ((request.status = 404 && resp.usernotfound)) {
-        if (confirm("We did not find you in our database, are you new?")) {
-          //cleaning cwid
-          var cwid = formdata[0].value
-            .match(/(^;\d{9}(?:=))|(^M\d+)|(^\d{8,9})/g)[0]
-            .replace(/\D/g, "")
-            .replace(/^0+/g, "")
-            .trim();
-          document.cookie = `cwid=${cwid}; path=/`;
-          location.assign("/public/register.html");
-        } else {
-          location.reload();
-        }
+        //cleaning cwid
+        var cwid = formdata[0].value
+          .match(/(^;\d{9}(?:=))|(^M\d+)|(^\d{8,9})/g)[0]
+          .replace(/\D/g, "")
+          .replace(/^0+/g, "")
+          .trim();
+        document.cookie = `cwid=${cwid}; path=/`;
+        location.assign("/public/register.html");
       } else {
-        var errstr = "";
-        for (err in resp) {
-          errstr += resp[err];
-        }
-        alert(errstr);
+        location.reload();
       }
-
-      // document.getElementById("date").innerHTML = errstr;
     }
   };
   console.log(data);

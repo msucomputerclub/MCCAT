@@ -36,24 +36,30 @@ router.post("/signin", (req, res) => {
       errors.usernotfound = "user not found";
       return res.status(404).json(errors);
     } else {
-      Meeting.findOne({date: new Date().toLocaleDateString()}).then(meeting=>{
-        if(meeting){
-          Meeting.updateOne(
-            { date: new Date().toLocaleDateString() },
-            {
-              $addToSet: {
-                attendees: {
-                  _id: user._id
+      Meeting.findOne({ date: new Date().toLocaleDateString() }).then(
+        meeting => {
+          if (meeting) {
+            Meeting.updateOne(
+              { date: new Date().toLocaleDateString() },
+              {
+                $addToSet: {
+                  attendees: {
+                    _id: user._id
+                  }
                 }
               }
-            }
-          )
-            .then(res.status(200).json(`Hello ${user.firstName}, welcome to Computer Club`))
-            .catch(err => console.log(err));
-        }else{
-          return res.status(404).json("Meeting does not exist");
+            )
+              .then(
+                res
+                  .status(200)
+                  .json(`Hello ${user.firstName}, welcome to Computer Club`)
+              )
+              .catch(err => console.log(err));
+          } else {
+            return res.status(404).json("Meeting does not exist");
+          }
         }
-      })
+      );
     }
   });
 });
@@ -83,17 +89,22 @@ router.get("/create/today", (req, res) => {
   });
 });
 
-router.get("/info/:date", (req, res) => {
+router.get("/:date", (req, res) => {
   Meeting.findOne({
     date: new Date(req.params.date).toLocaleDateString()
-  }).then(meeting => {
-    if (!meeting) {
-      errors.nomeeting = "no meeting found";
-      return res.status(404).json(errors);
-    } else {
-      return res.status(200).json(meeting);
-    }
-  });
+  })
+    .populate("attendees", "firstName lastName")
+    .then(meeting => {
+      if (!meeting) {
+        errors.nomeeting = "no meeting found";
+        return res.status(404).json(errors);
+      } else {
+        return res.status(200).json(meeting);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 module.exports = router;

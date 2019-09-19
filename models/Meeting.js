@@ -9,7 +9,7 @@ const meetingSchema = new Schema({
   attendees: [
     {
       type: Schema.Types.ObjectId,
-      ref: "users"
+      ref: "user"
     }
   ]
 });
