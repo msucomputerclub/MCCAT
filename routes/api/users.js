@@ -3,6 +3,7 @@ const router = express.Router();
 
 //import models
 const User = require("../../models/User");
+const Meeting = require("../../models/Meeting");
 
 //import validation
 const validateRegisterInput = require("../../validation/register");
@@ -31,9 +32,34 @@ router.post("/register", (req, res) => {
       })
         .save()
         .then(user => {
-            console.log(`user ${user.firstName} registered`);
-            return res.status(200).json("user registered");
-        }).catch(err=>{
+          console.log(`user ${user.firstName} registered`);
+          Meeting.findOne({ date: new Date().toLocaleDateString() }).then(
+            meeting => {
+              if (meeting) {
+                Meeting.updateOne(
+                  { date: new Date().toLocaleDateString() },
+                  {
+                    $addToSet: {
+                      attendees: {
+                        _id: user._id
+                      }
+                    }
+                  }
+                )
+                  .then(
+                    res
+                      .status(200)
+                      .json(`Hello ${user.firstName}, welcome to Computer Club`)
+                  )
+                  .catch(err => console.log(err));
+              } else {
+                return res.status(404).json("Meeting does not exist");
+              }
+            }
+          );
+          // return res.status(200).json("user registered");
+        })
+        .catch(err => {
           console.log(err);
         });
     }
