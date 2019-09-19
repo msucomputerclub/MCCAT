@@ -25,6 +25,16 @@ router.get("/", (req, res) => {
   });
 });
 
+router.get("/all", (req, res) => {
+  var data = { dates: [] };
+  Meeting.find().then(meet => {
+    meet.forEach(m => {
+      data.dates.push({ date: m.date, count: m.attendees.length });
+    });
+    return res.json(data);
+  });
+});
+
 //@route  GET api/meeting/create/today
 //@desc   create meeting for current day
 //@access Public
