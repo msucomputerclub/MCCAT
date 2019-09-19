@@ -61,7 +61,38 @@ router.get("/:date", (req, res) => {
         errors.nomeeting = "no meeting found";
         return res.status(404).json(errors);
       } else {
-        return res.status(200).json(meeting);
+        const list = [];
+        meeting.attendees.forEach(member => {
+          list.push(`${member.firstName} ${member.lastName}`);
+        });
+        res.json({
+          list: list
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
+//@route  GET api/meeting/sheets/:date
+//@desc   get sheets function to import attendance
+//@access Public
+router.get("/sheets/:date", (req, res) => {
+  Meeting.findOne({
+    date: new Date(req.params.date).toLocaleDateString()
+  })
+    .populate("attendees", "firstName lastName")
+    .then(meeting => {
+      if (!meeting) {
+        errors.nomeeting = "no meeting found";
+        return res.status(404).json(errors);
+      } else {
+        const list = [];
+        meeting.attendees.forEach(member => {
+          list.push(`${member.firstName} ${member.lastName}`);
+        });
+        res.send(`=TRANSPOND(SPLIT("${list.join()}",","))`);
       }
     })
     .catch(err => {
