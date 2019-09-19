@@ -96,4 +96,15 @@ router.post("/info", (req, res) => {
   });
 });
 
+router.delete("/", (req, res) => {
+  User.deleteOne({ cwid: req.cwid })
+    .then(response => {
+      return res.status(200).json(`user ${req.cwid} deleted`);
+    })
+    .catch(err => {
+      console.warn(err);
+      return res.status(500).json(err);
+    });
+});
+
 module.exports = router;
