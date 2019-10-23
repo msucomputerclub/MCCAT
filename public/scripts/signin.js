@@ -17,6 +17,7 @@ function signin() {
       location.reload();
     } else {
       if ((request.status = 404 && resp.usernotfound)) {
+        console.log("404");
         //cleaning cwid
         var cwid = formdata[0].value
           .match(/(^;\d{9}(?:=))|(^M\d+)|(^\d{8,9})/g)[0]
@@ -24,7 +25,7 @@ function signin() {
           .replace(/^0+/g, "")
           .trim();
         document.cookie = `cwid=${cwid}; path=/`;
-        location.assign("/public/register.html");
+        window.location.href = "/register";
       } else {
         location.reload();
       }
@@ -52,7 +53,7 @@ function register() {
 
     if (request.status >= 200 && request.status < 400) {
       alert("Thank you for joining the Computer Club");
-      location.assign("/public/index.html");
+      window.location.href = "/";
     } else {
       console.log(request.response);
       alert("error, let us know if this happens :/");

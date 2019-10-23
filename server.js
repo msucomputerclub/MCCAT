@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const path = require('path');
+const path = require("path");
 
 const { mongoURI, port } = require("./config/config");
 
@@ -24,7 +24,7 @@ app.use(cors());
 //Body Parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static('public'))
+app.use(express.static("public"));
 
 mongoose
   .connect(mongoURI, { useNewUrlParser: true })
@@ -37,15 +37,10 @@ app.use("/api/users", users);
 app.use("/api/meeting", meeting);
 
 app.get("/", (req, res, next) => {
-  res.sendFile(path.resolve(`${__dirname}/client2/index.html`));
+  res.sendFile(path.resolve(`${__dirname}/public/index.html`));
 });
-
-app.post("/", (req, res, next) => {
-  var cwid = req.body.cwid;
-  console.log(cwid);
-  return res.status(200).json({
-    cwid
-  });
+app.get("/register", (req, res, next) => {
+  res.sendFile(path.resolve(`${__dirname}/public/register.html`));
 });
 
 app.listen(port, () => {

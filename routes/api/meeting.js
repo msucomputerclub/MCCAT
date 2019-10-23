@@ -164,10 +164,11 @@ router.post("/test", (req, res, next) => {
   return res.status(200).json(req.formData);
 });
 
-router.delete("/:date", (req, res) => {
-  Meeting.deleteOne({ date: new Date(req.params.date).toLocaleDateString() })
+router.delete("/", (req, res) => {
+  Meeting.deleteOne({ date: new Date(req.body.date).toLocaleDateString() })
     .then(response => {
-      return res.status(200).json("meeting removed");
+      console.log(response);
+      return res.status(200).json(`meeting deleted`);
     })
     .catch(err => {
       console.warn(err);

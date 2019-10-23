@@ -97,14 +97,33 @@ router.post("/info", (req, res) => {
 });
 
 router.delete("/", (req, res) => {
-  User.deleteOne({ cwid: req.cwid })
-    .then(response => {
-      return res.status(200).json(`user ${req.cwid} deleted`);
-    })
-    .catch(err => {
-      console.warn(err);
-      return res.status(500).json(err);
-    });
+  const errors = {};
+  const query = {};
+  if (req.body.firstName && req.body.lastName) {
+    query.firstName = req.body.firstName;
+    query.lastName = req.body.lastName;
+  }
+  if (req.body.cwid) {
+    query.cwid = req.body.cwid;
+  }
+  if (req.body.email) {
+    query.email = req.body.email;
+  }
+
+  User.findOne(query).then(user => {
+    if (!user) {
+      errors.nouser = "no user match found";
+      return res.status(400).json(errors);
+    }
+    User.deleteOne({ _id: user._id })
+      .then(response => {
+        return res.status(200).json(`user deleted`);
+      })
+      .catch(err => {
+        console.warn(err);
+        return res.status(500).json(err);
+      });
+  });
 });
 
 module.exports = router;
