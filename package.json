@@ -1,29 +1,23 @@
 {
-  "name": "mccat",
+  "name": "mccat-electron",
   "version": "1.0.0",
-  "description": "attendance based on student IDs",
-  "main": "server.js",
+  "description": "Software tracking member attendence using student IDs.",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/msucomputerclub/MCCAT.git"
   },
-  "author": "cristian novac",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/msucomputerclub/MCCAT/issues"
   },
   "homepage": "https://github.com/msucomputerclub/MCCAT#readme",
-  "dependencies": {
-    "body-parser": "^1.18.3",
-    "cors": "^2.8.5",
-    "dotenv": "^7.0.0",
-    "electron": "^7.1.1",
-    "express": "^4.16.4",
-    "mongoose": "^5.7.5",
-    "path": "^0.12.7",
-    "validator": "^10.11.0"
+  "devDependencies": {
+    "electron": "^7.1.1"
   }
 }
