@@ -19,5 +19,6 @@
   "homepage": "https://github.com/msucomputerclub/MCCAT#readme",
   "devDependencies": {
     "electron": "^7.1.1"
-  }
+  },
+  "dependencies": {}
 }
