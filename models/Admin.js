@@ -2,17 +2,19 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const adminSchema = new Schema({
-  name: {
+  email: {
     type: String,
-    required: [true, "please enter a name"]
+    required: true
   },
   password: {
-    type: String,
-    required: [true, "please enter a password"],
-    select: false,
-    minlength: 6
+    type: String
   },
-  createdAt: {
+  role: {
+    type: String,
+    enum: ["member", "admin"],
+    default: "member"
+  },
+  date: {
     type: Date,
     default: Date.now
   }
